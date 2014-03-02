@@ -4,23 +4,17 @@
 #include <random>
 #include <cstdio>
 #include <cmath>
+#include "objective.h"
 #define pi acos(-1)
 using namespace std;
 
-extern int d;                        /* Dimension of the search variables */
-extern double ub_val, lb_val, beta;
-extern double sigma;                 /* Variance of Levy distribution */
+extern double beta;
+extern double sigma;  /* Variance of Levy distribution */
 
 struct result{
 	double *best, fmin;
 	int iteration, tot_eval;
 };
-
-/* Evaluate function */
-double func(double x[]);
-
-/* Application of simple constraints */
-void simplebounds(int n, double *s, double lb[], double ub[]);
 
 /* Draw n Levy flight sample */
 double* levy(int n);

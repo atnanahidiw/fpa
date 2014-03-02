@@ -8,20 +8,6 @@ uniform_real_distribution<double> uniform(0.0, 1.0);
 /* Variance of Levy distribution */
 double sigma = pow(tgamma(1.0+beta)*sin(pi*beta/2.0)/(tgamma((1.0+beta)/2.0)*beta*pow(2.0, (beta-1.0)/2.0)), 1.0/beta);
 
-/* Application of simple constraints */
-void simplebounds(int n, double *s, double lb[], double ub[]){
-	for(int i=0; i<n; ++i){
-		/* Apply the lower bound */
-		if(s[i]<lb[i]) s[i] = lb[i];
-
-		/* Apply the upper bounds */
-		if(s[i]>ub[i]) s[i] = ub[i];
-
-//		printf("%.5lf ", s[i]);
-	}
-//	printf("\n");
-}
-  	
 /* Draw n Levy flight sample */
 double* levy(int n){
 	double *step = new double[n];
@@ -130,7 +116,8 @@ result fpa(int n, int max_iter, double p){
 	/* Return the result */
 	result res;
 	res.fmin      = fmin;
-	res.best      = best;
+	res.best      = new double[d];
+	for (int i=0; i<d; ++i) res.best[i] = best[i];
 	res.iteration = iter;
 
 	return res;
@@ -139,12 +126,5 @@ result fpa(int n, int max_iter, double p){
 /* Flower pollination algorithm */
 /* Default parameter */
 result fpa(){
-	result temp = fpa(5, 20000, 0.8);
-
-//	printf("Fmin: %.2f\n", temp.fmin);
-//	printf("Nilai terbaik: ");
-//	for(int i=0; i<d; ++i)  printf("%.2f ", temp.best[i]);
-//	printf("\n");
-
-	return temp;
+	return fpa(5, 20000, 0.8);
 }
