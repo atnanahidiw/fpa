@@ -5,7 +5,7 @@
 #include <cstdio>
 #include <cmath>
 #include "objective.h"
-#define pi acos(-1)
+#define eps 0.0000000001
 using namespace std;
 
 extern double beta;
@@ -13,7 +13,7 @@ extern double sigma;  /* Variance of Levy distribution */
 
 struct result{
 	double *best, fmin;
-	int iteration, tot_eval;
+	int tot_eval;
 };
 
 /* Draw n Levy flight sample */

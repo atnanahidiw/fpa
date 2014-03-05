@@ -2,9 +2,9 @@
 #include <cstdio>
 #include <ctime>
 #include "fpa.h"
-#define epsilon 0.000000001
 using namespace std;
 
+result res;
 int d         = 3;
 double beta   = 1.5;
 int count     = 0;
@@ -15,35 +15,57 @@ int count     = 0;
 /* 3 : Rosenbrock function (fmin=0, x[i]=1) */
 /* 4 : Ackley function     (fmin=0, x[i]=0) */
 /* 5 : Rastrigin function  (fmin=0, x[i]=0) */
-/* 6 : Griewank function   (fmin=0, x[i]=0) */  /* still error */
+/* 6 : Griewank function   (fmin=0, x[i]=0) */
 /* 7 : Salomon function    (fmin=0, x[i]=0) */  /* still error */
-int test_type = 0;
+int test_type = 3;
+
+void fpa_run(){
+	res = fpa(45, 2500, 0.8);
+}
+
+void eval(){
+	clock_t t_start = clock();
+	fpa_run();
+
+	printf("Waktu           : %.2lfs\n", (double)(clock() - t_start)/CLOCKS_PER_SEC);
+	printf("Fmin            : %.5lf\n", res.fmin);
+	printf("Nilai terbaik   : ");
+	for(int i=0; i<d; ++i)  printf("%.2lf ", res.best[i]);
+	printf("\n");
+	printf("Banyak evaluasi : %d\n", res.tot_eval);
+}
+
+void accurate_test(){
+	int i, j, max_eval = 0;
+	clock_t start, t_start = clock();
+	double time, slowest = 0.0;
+
+	for(i=0; i<1000; ++i){
+		start    = clock();
+		fpa_run();
+		if(abs(res.fmin - target_val) < eps) ++count;
+		else{
+			printf("Fmin            : %.5lf\n", res.fmin);
+			printf("Nilai terbaik   : ");
+			for(j=0; j<d; ++j)  printf("%.2lf ", res.best[j]);
+			printf("\n");
+			printf("Banyak evaluasi : %d\n", res.tot_eval);
+		}
+		time = (double)(clock() - start)/CLOCKS_PER_SEC;
+		if(time>slowest) slowest = time;
+		if(res.tot_eval>max_eval) max_eval = res.tot_eval;
+	}
+
+	printf("Akurasi                    : %.2lf\%\n", (double)count/10.0);
+	printf("Evaluasi Paling Banyak     : %d\n", max_eval);
+	printf("Waktu Evaluasi Paling Lama : %.2lfs\n", slowest);
+	printf("Waktu Total                : %.2lfs\n", (double)(clock() - t_start)/CLOCKS_PER_SEC);
+}
 
 int main(){
-	clock_t t_start;
-	init_constraint();
-	t_start     = clock();
-//	for(int a=0; a<100; ++a){
-	result res  = fpa(5, 20000, 0.8);
-
-	printf("Waktu: %.2lfs\n", (double)(clock() - t_start)/CLOCKS_PER_SEC);
-	printf("Fmin: %.2lf\n", res.fmin);
-	printf("Nilai terbaik: ");
-	for(int i=0; i<d; ++i)  printf("%.2f ", res.best[i]);
-	printf("\n");
-//	printf("Banyak iterasi: %d\n", res.iteration);
-//	printf("Banyak evaluasi: %d\n", res.tot_eval);
-
-//	if(abs(res.fmin) < epsilon) ++count;
-//	else{
-//		printf("Fmin: %.2lf\n", res.fmin);
-//		printf("Nilai terbaik: ");
-//		for(int i=0; i<d; ++i)  printf("%.2f ", res.best[i]);
-//		printf("\n");
-//	}
-//	}
-//	printf("Akurasi : %d\%\n", count);
-//	printf("Waktu: %.2lfs\n", (double)(clock() - t_start)/CLOCKS_PER_SEC);
+	init_constraint_target();
+//	eval();
+	accurate_test();
 
 	/* simplebounds check */
 //	double ub[2] = {1.0, 1.0}, lb[2] = {-1.0, -1.0}, s[2] = {-10.0, 2.0};

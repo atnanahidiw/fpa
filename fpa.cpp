@@ -53,19 +53,21 @@ result fpa(int n, int max_iter, double p){
 //	printf("\n");
 
 	/* Main algorithm */
-	double s[d], *l;
-	int iter = 0;
-	while(iter < max_iter){
+	bool stop = false;
+	int tot_eval, i_rand, j_rand, iter = 0;
+	double epsilon, fnew, norm, s[d], *l;
+	uniform_int_distribution<int> uniform_i(0, n-1);
+	while((iter < max_iter) && !stop){
 //		printf("Iteration %d\n", iter+1);
         /* Loop over all flower (solutions) */
-        for(i=0; i<n; ++i){
+        for(i=0; (i<n) && !stop; ++i){
 			double rand =  uniform(gen);
 			/* Pollens are carried by insects and thus can move in large scale, large distance. */
 			/* Formula: x[t+1][i] = x[t][i] + l*(x[t][i]-best) */
 			if(rand<p){
-			l = levy(d);
-//			for(j=0; j<d; ++j) printf("%.10lf ", l[j]);
-//			printf("\n");
+				l = levy(d);
+//				for(j=0; j<d; ++j) printf("%.10lf ", l[j]);
+//				printf("\n");
 				for(j=0; j<d; ++j)
 					s[j] = sol[i][j] + l[j] * (sol[i][j] - best[j]);
 				simplebounds(d, s, lb, ub);  /* Check if the simple limits/bounds are OK */
@@ -75,23 +77,27 @@ result fpa(int n, int max_iter, double p){
 			/* If not, then local pollination of neighbor flowers */
 			/* Formula: x[t+1][i] = x[t][i] + eps*(x[t][irand]-x[t][jrand]) */
 			else{
-				int irand, jrand;
-				double eps = uniform(gen);
-				
 				/* Find random flowers in the neighbourhood */
-				uniform_int_distribution<int> uniform_i(0, n-1);
-				do{ irand = uniform_i(gen); } while(irand==i);
-				do{ jrand = uniform_i(gen); } while((jrand==i) || (jrand==irand));
-				for(j=0; j<d; ++j) s[j] = sol[i][j] + eps * (sol[irand][j] - sol[jrand][j]);
+				do{ i_rand = uniform_i(gen); } while(i_rand==i);
+				do{ j_rand = uniform_i(gen); } while((j_rand==i) || (j_rand==i_rand));
+
+				epsilon = uniform(gen);
+				for(j=0; j<d; ++j) s[j] = sol[i][j] + epsilon * (sol[i_rand][j] - sol[j_rand][j]);
 				simplebounds(d, s, lb, ub);  /* Check if the simple limits/bounds are OK */
 			}
 
-//			printf("Solution %d -> %.2lf | ", i+1, fitness[i]);
-//			for(j=0; j<d; ++j) printf("%.2lf ", s[j]);
-//			printf("\n");
-//			printf("%.2lf\n", rand);
+			fnew = func(s);  /* Evaluate new solutions */
 
-			double fnew = func(s);  /* Evaluate new solutions */
+	        /* Stop function */
+	        /* Check if the the diffence of fnew and solution less than eps */
+//		    norm = 0.0;
+//		    for(j=0; j<d; ++j) norm += pow(s[j]-sol[i][j], 2.0);
+//		    norm = sqrt(norm);
+//		    if((abs((fnew-fmin))<eps) && (norm<eps)){
+		    if((abs(fmin-target_val)<eps)){
+		    	stop     = true;
+		    	tot_eval = iter*n+i+1;
+		    }
 
 			/* If fitness improves (better solutions found), update then */
 			if (fnew<=fitness[i]){
@@ -104,9 +110,14 @@ result fpa(int n, int max_iter, double p){
 				fmin = fnew;
 				for(j=0; j<d; ++j) best[j] = s[j];
 			}
+
+//			printf("Solution %d -> %.2lf | ", i+1, fitness[i]);
+//			for(j=0; j<d; ++j) printf("%.2lf ", s[j]);
+//			printf("\n");
 		}
 		++iter;
 	}
+	if(!stop) tot_eval = max_iter*n;
 
 //	printf("Fmin: %.2lf\n", fmin);
 //	printf("Nilai terbaik: ");
@@ -118,7 +129,7 @@ result fpa(int n, int max_iter, double p){
 	res.fmin      = fmin;
 	res.best      = new double[d];
 	for (int i=0; i<d; ++i) res.best[i] = best[i];
-	res.iteration = iter;
+	res.tot_eval  = tot_eval;
 
 	return res;
 }
@@ -126,5 +137,5 @@ result fpa(int n, int max_iter, double p){
 /* Flower pollination algorithm */
 /* Default parameter */
 result fpa(){
-	return fpa(5, 20000, 0.8);
+	return fpa(20, 2000, 0.8);
 }
