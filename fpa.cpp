@@ -1,7 +1,12 @@
 #include "fpa.h"
 
-random_device rd;
-mt19937 gen(rd());
+/* Used on Unix */
+//random_device rd;
+//mt19937 gen(rd());
+
+/* Used on Windows */
+mt19937 gen(static_cast<unsigned int>(time(NULL)));
+
 normal_distribution<double> normal(0.0, 0.1);
 uniform_real_distribution<double> uniform(0.0, 1.0);
 
@@ -13,10 +18,10 @@ double* levy(int n){
 	double *step = new double[n];
 	for(int i=0; i<n; ++i){
 		step[i] = normal(gen)*sigma/pow(abs(normal(gen)), 1.0/beta);
-//		printf("%.2lf ", step[i]);
+//		cout << step[i] << " ";
 //		step[i] *= 0.01;
 	}
-//	printf("| ");
+//	cout << "| ";
 	return step;
 }
 
@@ -33,6 +38,7 @@ result fpa(int n, int max_iter, double p){
 		lb[i] = lb_val;
 		ub[i] = ub_val;
 	}
+
 	for(i=0; i<n; ++i){
 		for(j=0; j<d; ++j) sol[i][j] = lb[j] + (ub[j] - lb[j]) * uniform(gen);
 		fitness[i] = func(sol[i]);
@@ -49,8 +55,14 @@ result fpa(int n, int max_iter, double p){
 		}
 	for(i=0; i<d; ++i) best[i] = sol[imin][i];
 
-//	for(int i=0; i<d; ++i)  printf("%.2lf ", best[i]);
-//	printf("\n");
+//	for(int i=0; i<d; ++i) cout << best[i] << " ";
+//	cout << endl;
+
+//	for(i=0; i<n; ++i){
+//		cout << "Solution " << i+1 << " -> " << fitness[i] << " | ";
+//		for(j=0; j<d; ++j) cout << sol[i][j] << " ";
+//		cout << endl;
+//	}
 
 	/* Main algorithm */
 	bool stop = false;
@@ -58,7 +70,7 @@ result fpa(int n, int max_iter, double p){
 	double epsilon, fnew, norm, s[d], *l;
 	uniform_int_distribution<int> uniform_i(0, n-1);
 	while((iter < max_iter) && !stop){
-//		printf("Iteration %d\n", iter+1);
+//		cout << "Iteration " << iter+1 << endl;
         /* Loop over all flower (solutions) */
         for(i=0; (i<n) && !stop; ++i){
 			double rand =  uniform(gen);
@@ -66,13 +78,13 @@ result fpa(int n, int max_iter, double p){
 			/* Formula: x[t+1][i] = x[t][i] + l*(x[t][i]-best) */
 			if(rand<p){
 				l = levy(d);
-//				for(j=0; j<d; ++j) printf("%.10lf ", l[j]);
-//				printf("\n");
+//				for(j=0; j<d; ++j) cout << l[j] << " ";
+//				cout << endl;
 				for(j=0; j<d; ++j)
 					s[j] = sol[i][j] + l[j] * (sol[i][j] - best[j]);
 				simplebounds(d, s, lb, ub);  /* Check if the simple limits/bounds are OK */
-//				for(j=0; j<d; ++j) printf("%.10lf ", s[j]);
-//				printf("\n");
+//				for(j=0; j<d; ++j) cout << s[j] << " ";
+//				cout << endl;
 			}
 			/* If not, then local pollination of neighbor flowers */
 			/* Formula: x[t+1][i] = x[t][i] + eps*(x[t][irand]-x[t][jrand]) */
@@ -111,18 +123,18 @@ result fpa(int n, int max_iter, double p){
 				for(j=0; j<d; ++j) best[j] = s[j];
 			}
 
-//			printf("Solution %d -> %.2lf | ", i+1, fitness[i]);
-//			for(j=0; j<d; ++j) printf("%.2lf ", s[j]);
-//			printf("\n");
+//			cout << "Solution " << i+1 << " -> " << fitness[i] << " | ";
+//			for(j=0; j<d; ++j) cout << s[j] << " ";
+//			cout << endl;
 		}
 		++iter;
 	}
 	if(!stop) tot_eval = max_iter*n;
 
-//	printf("Fmin: %.2lf\n", fmin);
-//	printf("Nilai terbaik: ");
-//	for(int i=0; i<d; ++i)  printf("%.2lf ", best[i]);
-//	printf("\n");
+//	cout << "Fmin          : " << fmin << endl;
+//	cout << "Nilai terbaik : ";
+//	for(int i=0; i<d; ++i)  cout << best[i]) << " ";
+//	cout << endl;
 
 	/* Return the result */
 	result res;

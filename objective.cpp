@@ -90,7 +90,7 @@ void simplebounds(int n, double *s, double lb[], double ub[]){
 		/* Apply the upper bounds */
 		if(s[i]>ub[i]) s[i] = ub[i];
 
-//		printf("%.5lf ", s[i]);
+//		cout << s[i] << " ";
 	}
-//	printf("\n");
+//	cout << endl;
 }

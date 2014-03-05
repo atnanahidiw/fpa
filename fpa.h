@@ -4,6 +4,7 @@
 #include <random>
 #include <cstdio>
 #include <cmath>
+#include <ctime>
 #include "objective.h"
 #define eps 0.0000000001
 using namespace std;
