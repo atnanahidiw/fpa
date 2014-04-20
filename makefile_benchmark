@@ -1,0 +1,16 @@
+all: clean benchmark
+
+benchmark: objective.o fpa.o benchmark.o
+	g++ objective.o fpa.o benchmark.o -o benchmark
+
+benchmark.o: benchmark.cpp
+	g++ -std=c++11 -c benchmark.cpp
+
+fpa.o: fpa.cpp
+	g++ -std=c++11 -c fpa.cpp
+
+objective.o: objective.cpp
+	g++ -c objective.cpp
+
+clean:
+	rm -rf *o benchmark
