@@ -1,16 +1,16 @@
 #ifndef Fpa_H
 #define Fpa_H
-#include <iostream>
 #include <random>
+#include <iostream>
 #include <cstdio>
 #include <cmath>
 #include <ctime>
 #include "objective.h"
-#define eps 0.0000000001
 using namespace std;
 
 extern double beta;
 extern double sigma;  /* Variance of Levy distribution */
+extern double gam;    /* Stepsize of Levy distribution */
 
 struct result{
 	double *best, fmin;
@@ -19,6 +19,9 @@ struct result{
 
 /* Draw n Levy flight sample */
 double* levy(int n);
+
+/* Application of simple constraints */
+void simplebounds(double *s, double lb[], double ub[]);
 
 /* Flower pollination algorithm */
 /* n        : size of flowers population */

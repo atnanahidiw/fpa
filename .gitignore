@@ -1,6 +1,7 @@
 /log
 /fpa
 /fpa.exe
+result
 
 # Compiled Object files
 *.slo
