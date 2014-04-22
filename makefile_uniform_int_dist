@@ -1,0 +1,16 @@
+all: clean uniform_int
+
+uniform_int: ziggurat.o acak.o uniform_int_dist.o
+	g++ ziggurat.o acak.o uniform_int_dist.o -o uniform_int
+
+uniform_int_dist.o: uniform_int_dist.cpp
+	g++ -std=c++11 -c uniform_int_dist.cpp
+
+acak.o: acak.cpp
+	g++ -std=c++11 -c acak.cpp
+
+ziggurat.o: ziggurat.cpp
+	g++ -c ziggurat.cpp
+
+clean:
+	rm -rf *o benchmark

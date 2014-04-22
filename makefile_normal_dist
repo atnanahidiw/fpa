@@ -1,0 +1,16 @@
+all: clean normal
+
+normal: ziggurat.o acak.o normal_dist.o
+	g++ ziggurat.o acak.o normal_dist.o -o normal
+
+normal_dist.o: normal_dist.cpp
+	g++ -std=c++11 -c normal_dist.cpp
+
+acak.o: acak.cpp
+	g++ -std=c++11 -c acak.cpp
+
+ziggurat.o: ziggurat.cpp
+	g++ -c ziggurat.cpp
+
+clean:
+	rm -rf *o benchmark
