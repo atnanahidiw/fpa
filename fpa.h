@@ -1,24 +1,16 @@
 #ifndef Fpa_H
 #define Fpa_H
-#include <random>
 #include <iostream>
 #include <cstdio>
 #include <cmath>
-#include <ctime>
+#include "acak.h"
 #include "objective.h"
 using namespace std;
-
-extern double beta;
-extern double sigma;  /* Variance of Levy distribution */
-extern double gam;    /* Stepsize of Levy distribution */
 
 struct result{
 	double *best, fmin;
 	int tot_eval;
 };
-
-/* Draw n Levy flight sample */
-double* levy(int n);
 
 /* Application of simple constraints */
 void simplebounds(double *s, double lb[], double ub[]);
