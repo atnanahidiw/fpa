@@ -12,14 +12,14 @@ string test_type_name[8] = {"", "De Jong", "eggcrate", "Rosenbrock", "Ackley", "
 /* 5 : Rastrigin function  (fmin=0, x[i]=0) */
 /* 6 : Griewank function   (fmin=0, x[i]=0) */
 /* 7 : Salomon function    (fmin=0, x[i]=0) */  /* still error */
-int test_type = 1;
+int test_type = 6;
 
 int x        = 50;
 double beta  = 1.5;
 double gam   = 0.075;
 double eps   = 1.0e-5;
-int d        = 20;
-int n        = 25;
+int d        = 16;
+int n        = 50;
 int max_iter = 100000;
 double p     = 0.8;
 
@@ -59,6 +59,7 @@ void fpa_run(){
 }
 
 int main(){
+	init_acak();
 	init_constraint_target();
 	int i, j, eval[x], count;
 	clock_t start;
@@ -72,10 +73,10 @@ int main(){
 	cout << "Stepsize          : " << gam << endl;
 	cout << "Toleransi         : " << eps << endl;
 	cout << "/************************************************************************/" << endl << endl;
-	
+
 	count = 0;
 	for(i=0; i<x; ++i){
-		cout << i+1 << endl;
+		// cout << i+1 << endl;
 		start = clock();
 		fpa_run();
 		time[i] = (double)(clock() - start)/CLOCKS_PER_SEC;

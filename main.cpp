@@ -29,6 +29,7 @@ void fpa_run(){
 }
 
 int main(){
+	init_acak();
 	init_constraint_target();
 	clock_t t_start = clock();
 	fpa_run();

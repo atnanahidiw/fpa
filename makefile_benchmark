@@ -1,7 +1,7 @@
 all: clean benchmark
 
-benchmark: acak.o objective.o fpa.o benchmark.o
-	g++ acak.o objective.o fpa.o benchmark.o -o benchmark
+benchmark: ziggurat.o acak.o objective.o fpa.o benchmark.o
+	g++ ziggurat.o acak.o objective.o fpa.o benchmark.o -o benchmark
 
 benchmark.o: benchmark.cpp
 	g++ -std=c++11 -c benchmark.cpp
@@ -14,6 +14,9 @@ objective.o: objective.cpp
 
 acak.o: acak.cpp
 	g++ -std=c++11 -c acak.cpp
+
+ziggurat.o: ziggurat.cpp
+	g++ -c ziggurat.cpp
 
 clean:
 	rm -rf *o benchmark

@@ -2,8 +2,10 @@
 #define Acak_H
 #include <cstdlib>
 #include <ctime>
-#include <random>
+// #include <random>
+#include <cstdint>
 #include <cmath>
+#include "ziggurat.hpp"
 #define pi acos(-1)
 using namespace std;
 
@@ -12,11 +14,13 @@ extern double sigma;  /* Variance of Levy distribution */
 extern double gam;    /* Stepsize of Levy distribution */
 
 /* Used on Unix */
-static random_device rd;
-static mt19937 gen;
+// static random_device rd;
+// static mt19937 gen;
 
 /* Used on Windows */
 // static mt19937 gen(static_cast<unsigned int>(time(NULL)));
+
+void init_acak();
 
 /* Return random sampling following uniform distribution */
 double uniform();
