@@ -1,6 +1,9 @@
 #include "fpa.h"
 
 /* Application of simple constraints */
+/* s  : target to be constrained */
+/* lb : lower bound constraint */
+/* ub : upper bound constraint */
 void simplebounds(double *s, double lb[], double ub[]){
 	for(int i=0; i<d; ++i){
 		/* Apply the lower bound */
@@ -52,7 +55,7 @@ result fpa(int n, int max_iter, double p){
 	/* Main algorithm */
 	bool stop = false;
 	int tot_eval, i_rand, j_rand, iter = 0;
-	double epsilon, fnew, norm, *l;
+	double epsilon, fnew, *l;
 	while((iter < max_iter) && !stop){
 //		cout << "Iteration " << iter+1 << endl;
 
@@ -96,16 +99,12 @@ result fpa(int n, int max_iter, double p){
 				for(j=0; j<d; ++j) best[j] = s[i][j];
 			}
 
-	        /* Stop function */
-	        /* Check if the the difference of fnew and solution less than eps */
-//		    norm = 0.0;
-//		    for(j=0; j<d; ++j) norm += pow(s[j]-sol[i][j], 2.0);
-//		    norm = sqrt(norm);
-//		    if((abs((fnew-fmin))<eps) && (norm<eps)){
-		    if((abs(fmin-target_val)<eps)){
-		    	stop     = true;
-		    	tot_eval = iter*n+i+1;
-		    }
+			/* Stop function */
+			/* Check if the the difference of fnew and solution less than eps */
+			if((abs(fmin-target_val)<eps)){
+				stop     = true;
+				tot_eval = iter*n+i+1;
+			}
 
 //			cout << "Solution " << i+1 << " -> " << fitness[i] << " | ";
 //			for(j=0; j<d; ++j) cout << s[j] << " ";

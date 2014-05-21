@@ -2,6 +2,7 @@
 #define Acak_H
 #include <cstdlib>
 #include <ctime>
+#include <chrono>
 // #include <random>
 #include <cstdint>
 #include <cmath>
@@ -10,12 +11,11 @@
 using namespace std;
 
 extern double beta;
-extern double sigma;  /* Variance of Levy distribution */
 extern double gam;    /* Stepsize of Levy distribution */
 
 /* Used on Unix */
 // static random_device rd;
-// static mt19937 gen;
+// static mt19937 gen(rd());
 
 /* Used on Windows */
 // static mt19937 gen(static_cast<unsigned int>(time(NULL)));

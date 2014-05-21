@@ -16,7 +16,7 @@ int main()
 
     init_acak();
     for(int n=0; n<100000; ++n) {
-        // std::cout << uniform_int(1,10) << ' ';
+        // std::cout << uniform_int(1,10) << endl;
         ++hist[uniform_int(2,8)];
     }
 

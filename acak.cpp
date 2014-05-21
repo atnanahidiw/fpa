@@ -3,21 +3,21 @@
 // normal_distribution<> normal_dist(0.0, 0.1);
 // uniform_real_distribution<> uniform_dist(0.0, 1.0);
 
-float fn[128];
-int i;
-int j;
-uint32_t kn[128];
-uint32_t seed;
-float value;
-float wn[128];
+/* Variance x of Levy distribution */
+static double sigma = pow(tgamma(1.0+beta)*sin(pi*beta/2.0)/(tgamma((1.0+beta)/2.0)*beta*pow(2.0, (beta-1.0)/2.0)), 1.0/beta);
+
+static float fn[128];
+static int i;
+static int j;
+static uint32_t kn[128];
+static uint32_t seed;
+static float value;
+static float wn[128];
 
 void init_acak(){
-	seed = static_cast<unsigned int>(time(NULL));
+	seed = static_cast<unsigned int>(chrono::duration_cast<chrono::microseconds>(chrono::system_clock::now().time_since_epoch()).count());
 	r4_nor_setup (kn, fn, wn);
 }
-
-/* Variance x of Levy distribution */
-double sigma = pow(tgamma(1.0+beta)*sin(pi*beta/2.0)/(tgamma((1.0+beta)/2.0)*beta*pow(2.0, (beta-1.0)/2.0)), 1.0/beta);
 
 /* Return random sampling following uniform distribution */
 double uniform(){

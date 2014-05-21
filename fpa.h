@@ -13,6 +13,9 @@ struct result{
 };
 
 /* Application of simple constraints */
+/* s  : target to be constrained */
+/* lb : lower bound constraint */
+/* ub : upper bound constraint */
 void simplebounds(double *s, double lb[], double ub[]);
 
 /* Flower pollination algorithm */
